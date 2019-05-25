@@ -1,5 +1,7 @@
 // /*global contract, config, it, assert*/
 
+const Bignumber = require('bignumber.js')
+
 const TokenExchange = require('Embark/contracts/TokenExchange');
 const OMGToken = require('Embark/contracts/OMGToken');
 const DAIToken = require('Embark/contracts/DAIToken');
@@ -55,16 +57,16 @@ contract("TokenExchange", function () {
   });
 
   it("mint OMG", async function () {
-    await OMGToken.methods.mint(accounts[0], '100000000000000000000000000').send({from: accounts[0]});
+    const amount = Bignumber(1000000000 * 10**18)
+    await OMGToken.methods.mint(accounts[0], amount.toString(10)).send({from: accounts[0]});
     let result = await OMGToken.methods.balanceOf(accounts[0]).call();
-    assert.strictEqual(result, '100000000000000000000000000');
+    assert.strictEqual(result, amount.toString(10));
   });
 
   describe("exchange omg to dai", async function() {
     it("Mint OMG", async function () {
       // Mint
-      await OMGToken.methods.mint(accounts[0], '100000000000000000000000000').send({from: accounts[0]});
-      const balanceBefore = await OMGToken.methods.balanceOf(accounts[0]).call();
+      await OMGToken.methods.mint(accounts[0], Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
     });
 
     it("Approve", async function () {
@@ -82,25 +84,42 @@ contract("TokenExchange", function () {
 
     it("Mint DAI", async function () {
       // Mint
-      await DAIToken.methods.mint(accounts[0], '100000000000000000000000000').send({from: accounts[0]});
+      await DAIToken.methods.mint(accounts[0], Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
     });
 
     it("Transfer DAI to exchange contract", async function() {
-      await DAIToken.methods.transfer(TokenExchange.address, '100000000000000000000000000').send({from: accounts[0]});
+      await DAIToken.methods.transfer(TokenExchange.address, Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
     })
 
     it("Convert OMG -> DAI", async function () {
+      const omgAmountToExchange = Bignumber(100);
+
+      // Balance before
+      const omgBalanceBefore = await OMGToken.methods.balanceOf(accounts[0]).call();
+      const daiBalanceBefore = await DAIToken.methods.balanceOf(accounts[0]).call();
+
       // Buy
-      await TokenExchange.methods.sell(100).send({from: accounts[0]});
+      await TokenExchange.methods.sell(omgAmountToExchange.toString(10)).send({from: accounts[0]});
 
-      let omgBalance = await OMGToken.methods.balanceOf(accounts[0]).call();
+      // Balance fater
+      const omgBalanceAfter = await OMGToken.methods.balanceOf(accounts[0]).call();
+      const daiBalanceAfter = await DAIToken.methods.balanceOf(accounts[0]).call();
+      // console.log(`omgBalanceAfter ${omgBalanceAfter}`)
+      // console.log(`daiBalanceAfter ${daiBalanceAfter}`)
 
-      let daiBalance = await DAIToken.methods.balanceOf(accounts[0]).call();
+      // Verify
+      // Get rate
+      let rateInDai = await TokenExchange.methods.rateInDai().call();
 
-      console.log(`omgBalance ${omgBalance}`)
-      console.log(`daiBalance ${daiBalance}`)
+      // Check if has correct omg balance
+      assert.strictEqual(omgBalanceAfter, Bignumber(omgBalanceBefore).minus(omgAmountToExchange).toString(10));
 
-      // assert.strictEqual(result, '100000000000000000000000000');
+      // Check if has correct dai balance
+      const expectedDaiReturn = omgAmountToExchange.times(rateInDai).div(1e18);
+      assert.strictEqual(
+        Bignumber(daiBalanceAfter).minus(Bignumber(daiBalanceBefore)).toString(10), 
+        expectedDaiReturn.toString(10)
+      );
     });
   })
 })
