@@ -16,5 +16,7 @@ contract OMGToken is PausableToken, MintableToken {
       name = _name;
       symbol = _symbol;
       decimals = _decimals;
+
+      mint(msg.sender, 100000000 * 10**18);
   }
 }

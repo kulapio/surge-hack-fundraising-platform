@@ -67,6 +67,9 @@ module.exports = {
       OMGToken: {
         args: [ 'OMG', 'OMG', 18 ],
         // onDeploy: ["OMGToken.methods.transfer('0x5666c33bb922F97B6721D3f932dfD9350C933a6F', \"100000000000000000000000000\").send()"]
+      },
+      DAIToken: {
+        args: [ 'DAI', 'DAI', 18 ],
       }
     }
   },
