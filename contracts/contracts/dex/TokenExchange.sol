@@ -27,7 +27,7 @@ contract TokenExchange {
     rateInDai = _rateInDai;
   }
 
-  function setDai(ERC20 _daiAddress) public {
+  function setDaiTokenAddress(ERC20 _daiAddress) public {
     dai = _daiAddress;
   }
 
@@ -46,6 +46,7 @@ contract TokenExchange {
     destAmt = destAmount;
 
     // Transfer dai back to user
+    dai.transfer(msg.sender, destAmount);
 
     return destAmount;
   }

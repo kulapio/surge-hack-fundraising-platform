@@ -5,7 +5,7 @@ import "./ERC20Token.sol";
 /**
  * @title Token
  */
-contract OMGToken is PausableToken, MintableToken {
+contract DAIToken is PausableToken, MintableToken {
   using SafeMath for uint256;
 
   string public name;
@@ -16,5 +16,7 @@ contract OMGToken is PausableToken, MintableToken {
       name = _name;
       symbol = _symbol;
       decimals = _decimals;
+
+      // mint(msg.sender, 100000000 * 10**18);
   }
 }

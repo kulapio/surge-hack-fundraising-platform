@@ -2,6 +2,7 @@
 
 const TokenExchange = require('Embark/contracts/TokenExchange');
 const OMGToken = require('Embark/contracts/OMGToken');
+const DAIToken = require('Embark/contracts/DAIToken');
 
 let accounts;
 
@@ -20,6 +21,9 @@ config({
     OMGToken: {
       args: [ 'OMG', 'OMG', 18 ],
       // onDeploy: ["OMGToken.methods.transfer('0x5666c33bb922F97B6721D3f932dfD9350C933a6F', \"100000000000000000000000000\").send()"]
+    },
+    DAIToken: {
+      args: [ 'DAI', 'DAI', 18 ],
     }
   }
 }, (_err, web3_accounts) => {
@@ -57,7 +61,7 @@ contract("TokenExchange", function () {
   });
 
   describe("exchange omg to dai", async function() {
-    it("Mint", async function () {
+    it("Mint OMG", async function () {
       // Mint
       await OMGToken.methods.mint(accounts[0], '100000000000000000000000000').send({from: accounts[0]});
       const balanceBefore = await OMGToken.methods.balanceOf(accounts[0]).call();
@@ -72,10 +76,30 @@ contract("TokenExchange", function () {
       await TokenExchange.methods.setTokenAddress(OMGToken.address).send({from: accounts[0]});
     });
 
+    it("Update dai token address for token exchanger", async function () {
+      await TokenExchange.methods.setDaiTokenAddress(DAIToken.address).send({from: accounts[0]});
+    });
+
+    it("Mint DAI", async function () {
+      // Mint
+      await DAIToken.methods.mint(accounts[0], '100000000000000000000000000').send({from: accounts[0]});
+    });
+
+    it("Transfer DAI to exchange contract", async function() {
+      await DAIToken.methods.transfer(TokenExchange.address, '100000000000000000000000000').send({from: accounts[0]});
+    })
+
     it("Convert OMG -> DAI", async function () {
       // Buy
       await TokenExchange.methods.sell(100).send({from: accounts[0]});
-      // let result =await OMGToken.methods.balanceOf(accounts[0]).call();
+
+      let omgBalance = await OMGToken.methods.balanceOf(accounts[0]).call();
+
+      let daiBalance = await DAIToken.methods.balanceOf(accounts[0]).call();
+
+      console.log(`omgBalance ${omgBalance}`)
+      console.log(`daiBalance ${daiBalance}`)
+
       // assert.strictEqual(result, '100000000000000000000000000');
     });
   })
