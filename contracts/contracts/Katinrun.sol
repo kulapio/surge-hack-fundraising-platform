@@ -5,7 +5,6 @@ import './ERC20Interface.sol';
 
 contract Katinrun {
   ERC20 public daiERC20;
-  address public swapContractAddr;
 
   enum ApproveStatus {PENDING,APPROVE,REJECT}
 
@@ -39,11 +38,6 @@ contract Katinrun {
     _;
   }
 
-  modifier isSwapContract {
-    require(swapContractAddr == msg.sender, "This contract is not a Swap contract");
-    _;
-  }
-
   modifier isProposalOwner (uint32 _pid) {
     require(proposals[_pid - 1].owner == msg.sender, "This address is not a proposal owner");
     _;
@@ -54,8 +48,7 @@ contract Katinrun {
     _;
   }
 
-  constructor(address _swapContractAddr, address _daiContractAddr) public {
-    swapContractAddr = _swapContractAddr;
+  constructor(address _daiContractAddr) public {
     daiERC20 = ERC20(_daiContractAddr);
     approvers[msg.sender] = true;
   }
@@ -101,7 +94,7 @@ contract Katinrun {
     proposals[_pid - 1].approveStatus = ApproveStatus.REJECT;
   }
 
-  function donateProposal(uint32 _pid, address _sponsor, uint256 _amount) public isSwapContract isProposalApproved(_pid) {
+  function donateProposal(uint32 _pid, address _sponsor, uint256 _amount) public isProposalApproved(_pid) {
     Proposal storage p = proposals[_pid - 1];
     require(block.timestamp < p.dueDate, "This proposal is finished");
     require(_amount > 0, "Amount cannot be 0");
