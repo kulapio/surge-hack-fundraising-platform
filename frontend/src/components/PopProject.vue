@@ -31,7 +31,7 @@
             :paddingless="true"
           />
           <div class="num">
-            <span>${{ proposal.backedAmount | numberWithComma(2) }}</span> of ${{ proposal.goal | numberWithComma(2) }}
+            <span>${{ backedAmount | numberWithComma(2) }}</span> of ${{ goal | numberWithComma(2) }}
           </div>
         </div>
       </div>
@@ -70,8 +70,8 @@ export default {
     async getPoppularProject () {
       this.proposal = await this.katinrun.methods.getProposal(1).call()
       this.timeLeft = moment.unix(this.proposal.dueDate).diff(moment(), 'days')
-      this.proposal.goal = bn(this.proposal.goal).toBase().toNumber()
-      this.proposal.backedAmount = bn(this.proposal.backedAmount).toBase().toNumber()
+      this.goal = bn(this.proposal.goal).toBase().toNumber()
+      this.backedAmount = bn(this.proposal.backedAmount).toBase().toNumber()
     }
   }
 }
