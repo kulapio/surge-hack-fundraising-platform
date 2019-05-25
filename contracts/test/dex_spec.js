@@ -64,6 +64,20 @@ contract("OMGExchange", function () {
   });
 
   describe("exchange omg to dai", async function() {
+    it("Init OMGExchange", async function() {
+      // Update omg token address for token exchanger
+      await OMGExchange.methods.setTokenAddress(OMGToken.address).send({from: accounts[0]});
+
+      // Update dai token address for token exchanger
+      await OMGExchange.methods.setDaiTokenAddress(DAIToken.address).send({from: accounts[0]});
+
+      // Mint DAI
+      await DAIToken.methods.mint(accounts[0], Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
+
+      // Transfer DAI to exchange contract
+      await DAIToken.methods.transfer(OMGExchange.address, Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
+    })
+
     it("Mint OMG", async function () {
       // Mint
       await OMGToken.methods.mint(accounts[0], Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
@@ -73,23 +87,6 @@ contract("OMGExchange", function () {
       // Approve first
       await OMGToken.methods.approve(OMGExchange.address, 100).send({from: accounts[0]});
     });
-
-    it("Update omg token address for token exchanger", async function () {
-      await OMGExchange.methods.setTokenAddress(OMGToken.address).send({from: accounts[0]});
-    });
-
-    it("Update dai token address for token exchanger", async function () {
-      await OMGExchange.methods.setDaiTokenAddress(DAIToken.address).send({from: accounts[0]});
-    });
-
-    it("Mint DAI", async function () {
-      // Mint
-      await DAIToken.methods.mint(accounts[0], Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
-    });
-
-    it("Transfer DAI to exchange contract", async function() {
-      await DAIToken.methods.transfer(OMGExchange.address, Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
-    })
 
     it("Convert OMG -> DAI", async function () {
       const omgAmountToExchange = Bignumber(100);
