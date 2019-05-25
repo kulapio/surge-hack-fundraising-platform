@@ -31,7 +31,7 @@
             :paddingless="true"
           />
           <div class="num">
-            <span>${{ proposal.backedAmount | numberWithComma }}</span> of ${{ proposal.goal | numberWithComma }}
+            <span>${{ proposal.backedAmount | numberWithComma(2) }}</span> of ${{ proposal.goal | numberWithComma(2) }}
           </div>
         </div>
       </div>
@@ -62,14 +62,16 @@ export default {
   },
   async mounted () {
     this.katinrun = await new this.$web3.eth.Contract(KTR_ABI, KATINRUN_ADDRESS)
-    this.proposal = await this.katinrun.methods.getProposal(1).call()
-    this.timeLeft = moment.unix(this.proposal.dueDate).diff(moment(), 'days')
-    this.proposal.goal = bn(this.proposal.goal).toBase().toNumber()
-    this.proposal.backedAmount = bn(this.proposal.backedAmount).toBase().toNumber()
+    setInterval(async () => {
+      await this.getPoppularProject()
+    }, 1000)
   },
   methods: {
     async getPoppularProject () {
-      // console.log(this.$web3)
+      this.proposal = await this.katinrun.methods.getProposal(1).call()
+      this.timeLeft = moment.unix(this.proposal.dueDate).diff(moment(), 'days')
+      this.proposal.goal = bn(this.proposal.goal).toBase().toNumber()
+      this.proposal.backedAmount = bn(this.proposal.backedAmount).toBase().toNumber()
     }
   }
 }
