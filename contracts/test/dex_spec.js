@@ -2,7 +2,7 @@
 
 const Bignumber = require('bignumber.js')
 
-const OMGExchange = require('Embark/contracts/OMGExchange');
+const DexExchange = require('Embark/contracts/DexExchange');
 const OMGToken = require('Embark/contracts/OMGToken');
 const DAIToken = require('Embark/contracts/DAIToken');
 
@@ -17,7 +17,7 @@ config({
   //  ]
   //},
   contracts: {
-    OMGExchange: {
+    DexExchange: {
       args: [ 'OMG', '0xC4375B7De8af5a38a93548eb8453a498222C4fF2', (2.03 * 1e18).toString() ]
     },
     OMGToken: {
@@ -32,27 +32,27 @@ config({
   accounts = web3_accounts
 });
 
-contract("OMGExchange", function () {
+contract("DexExchange", function () {
   this.timeout(0);
 
   it("should have correct token name", async function () {
-    let result = await OMGExchange.methods.tokenName().call();
+    let result = await DexExchange.methods.tokenName().call();
     assert.strictEqual(result, 'OMG');
   });
 
   it("should have correct rate", async function () {
-    let result = await OMGExchange.methods.rateInDai().call();
+    let result = await DexExchange.methods.rateInDai().call();
     assert.strictEqual(result, (2.03 * 1e18).toString());
   });
 
   it("should have correct toekn address", async function () {
-    let result = await OMGExchange.methods.token().call();
+    let result = await DexExchange.methods.token().call();
     assert.strictEqual(result, '0xC4375B7De8af5a38a93548eb8453a498222C4fF2');
   });
 
   it("set exchange rate", async function () {
-    await OMGExchange.methods.setRate((3.1 * 1e18).toString()).send({from: accounts[1]});
-    let result = await OMGExchange.methods.rateInDai().call();
+    await DexExchange.methods.setRate((3.1 * 1e18).toString()).send({from: accounts[1]});
+    let result = await DexExchange.methods.rateInDai().call();
     assert.strictEqual(result, (3.1 * 1e18).toString());
   });
 
@@ -64,18 +64,18 @@ contract("OMGExchange", function () {
   });
 
   describe("exchange omg to dai", async function() {
-    it("Init OMGExchange", async function() {
+    it("Init DexExchange", async function() {
       // Update omg token address for token exchanger
-      await OMGExchange.methods.setTokenAddress(OMGToken.address).send({from: accounts[0]});
+      await DexExchange.methods.setTokenAddress(OMGToken.address).send({from: accounts[0]});
 
       // Update dai token address for token exchanger
-      await OMGExchange.methods.setDaiTokenAddress(DAIToken.address).send({from: accounts[0]});
+      await DexExchange.methods.setDaiTokenAddress(DAIToken.address).send({from: accounts[0]});
 
       // Mint DAI
       await DAIToken.methods.mint(accounts[0], Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
 
       // Transfer DAI to exchange contract
-      await DAIToken.methods.transfer(OMGExchange.address, Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
+      await DAIToken.methods.transfer(DexExchange.address, Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
     })
 
     it("Mint OMG", async function () {
@@ -85,7 +85,7 @@ contract("OMGExchange", function () {
 
     it("Approve", async function () {
       // Approve first
-      await OMGToken.methods.approve(OMGExchange.address, 100).send({from: accounts[0]});
+      await OMGToken.methods.approve(DexExchange.address, 100).send({from: accounts[0]});
     });
 
     it("Convert OMG -> DAI", async function () {
@@ -96,7 +96,7 @@ contract("OMGExchange", function () {
       const daiBalanceBefore = await DAIToken.methods.balanceOf(accounts[0]).call();
 
       // Buy
-      await OMGExchange.methods.sell(omgAmountToExchange.toString(10)).send({from: accounts[0]});
+      await DexExchange.methods.sell(omgAmountToExchange.toString(10)).send({from: accounts[0]});
 
       // Balance fater
       const omgBalanceAfter = await OMGToken.methods.balanceOf(accounts[0]).call();
@@ -106,7 +106,7 @@ contract("OMGExchange", function () {
 
       // Verify
       // Get rate
-      let rateInDai = await OMGExchange.methods.rateInDai().call();
+      let rateInDai = await DexExchange.methods.rateInDai().call();
 
       // Check if has correct omg balance
       assert.strictEqual(omgBalanceAfter, Bignumber(omgBalanceBefore).minus(omgAmountToExchange).toString(10));

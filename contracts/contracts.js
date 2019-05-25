@@ -61,7 +61,7 @@ module.exports = {
       Katinrun: {
        args: [ 100 ]
       },
-      OMGExchange: {
+      DexExchange: {
         args: [ 'OMG', '0xc4375b7de8af5a38a93548eb8453a498222c4ff2', (2.03 * 1e18).toString() ]
       },
       OMGToken: {
