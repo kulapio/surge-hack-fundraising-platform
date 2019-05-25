@@ -57,6 +57,7 @@ contract Katinrun {
   constructor(address _swapContractAddr, address _daiContractAddr) public {
     swapContractAddr = _swapContractAddr;
     daiERC20 = ERC20(_daiContractAddr);
+    approvers[msg.sender] = true;
   }
 
   function addApprover(address _newApprover) public isApprover {
@@ -74,8 +75,7 @@ contract Katinrun {
     uint256 _goal,
     uint256 _dueDate
   ) public {
-    proposals.push(
-      Proposal({
+    Proposal memory p = Proposal({
         id: uint32(proposals.length) + 1,
         name: _proposalName,
         descHash: _proposalDescHash,
@@ -88,8 +88,9 @@ contract Katinrun {
         deliveryDescHash: "",
         deliveryDocHash: "",
         owner: msg.sender
-      })
-    );
+      });
+    
+    proposals.push(p);
   }
 
   function approveProposal(uint32 _pid) public isApprover {
