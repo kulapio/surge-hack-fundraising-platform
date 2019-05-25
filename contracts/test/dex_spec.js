@@ -2,7 +2,7 @@
 
 const Bignumber = require('bignumber.js')
 
-const TokenExchange = require('Embark/contracts/TokenExchange');
+const OMGExchange = require('Embark/contracts/OMGExchange');
 const OMGToken = require('Embark/contracts/OMGToken');
 const DAIToken = require('Embark/contracts/DAIToken');
 
@@ -17,7 +17,7 @@ config({
   //  ]
   //},
   contracts: {
-    TokenExchange: {
+    OMGExchange: {
       args: [ 'OMG', '0xC4375B7De8af5a38a93548eb8453a498222C4fF2', (2.03 * 1e18).toString() ]
     },
     OMGToken: {
@@ -32,27 +32,27 @@ config({
   accounts = web3_accounts
 });
 
-contract("TokenExchange", function () {
+contract("OMGExchange", function () {
   this.timeout(0);
 
   it("should have correct token name", async function () {
-    let result = await TokenExchange.methods.tokenName().call();
+    let result = await OMGExchange.methods.tokenName().call();
     assert.strictEqual(result, 'OMG');
   });
 
   it("should have correct rate", async function () {
-    let result = await TokenExchange.methods.rateInDai().call();
+    let result = await OMGExchange.methods.rateInDai().call();
     assert.strictEqual(result, (2.03 * 1e18).toString());
   });
 
   it("should have correct toekn address", async function () {
-    let result = await TokenExchange.methods.token().call();
+    let result = await OMGExchange.methods.token().call();
     assert.strictEqual(result, '0xC4375B7De8af5a38a93548eb8453a498222C4fF2');
   });
 
   it("set exchange rate", async function () {
-    await TokenExchange.methods.setRate((3.1 * 1e18).toString()).send({from: accounts[1]});
-    let result = await TokenExchange.methods.rateInDai().call();
+    await OMGExchange.methods.setRate((3.1 * 1e18).toString()).send({from: accounts[1]});
+    let result = await OMGExchange.methods.rateInDai().call();
     assert.strictEqual(result, (3.1 * 1e18).toString());
   });
 
@@ -71,15 +71,15 @@ contract("TokenExchange", function () {
 
     it("Approve", async function () {
       // Approve first
-      await OMGToken.methods.approve(TokenExchange.address, 100).send({from: accounts[0]});
+      await OMGToken.methods.approve(OMGExchange.address, 100).send({from: accounts[0]});
     });
 
     it("Update omg token address for token exchanger", async function () {
-      await TokenExchange.methods.setTokenAddress(OMGToken.address).send({from: accounts[0]});
+      await OMGExchange.methods.setTokenAddress(OMGToken.address).send({from: accounts[0]});
     });
 
     it("Update dai token address for token exchanger", async function () {
-      await TokenExchange.methods.setDaiTokenAddress(DAIToken.address).send({from: accounts[0]});
+      await OMGExchange.methods.setDaiTokenAddress(DAIToken.address).send({from: accounts[0]});
     });
 
     it("Mint DAI", async function () {
@@ -88,7 +88,7 @@ contract("TokenExchange", function () {
     });
 
     it("Transfer DAI to exchange contract", async function() {
-      await DAIToken.methods.transfer(TokenExchange.address, Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
+      await DAIToken.methods.transfer(OMGExchange.address, Bignumber(1000000000 * 10**18).toString(10)).send({from: accounts[0]});
     })
 
     it("Convert OMG -> DAI", async function () {
@@ -99,7 +99,7 @@ contract("TokenExchange", function () {
       const daiBalanceBefore = await DAIToken.methods.balanceOf(accounts[0]).call();
 
       // Buy
-      await TokenExchange.methods.sell(omgAmountToExchange.toString(10)).send({from: accounts[0]});
+      await OMGExchange.methods.sell(omgAmountToExchange.toString(10)).send({from: accounts[0]});
 
       // Balance fater
       const omgBalanceAfter = await OMGToken.methods.balanceOf(accounts[0]).call();
@@ -109,7 +109,7 @@ contract("TokenExchange", function () {
 
       // Verify
       // Get rate
-      let rateInDai = await TokenExchange.methods.rateInDai().call();
+      let rateInDai = await OMGExchange.methods.rateInDai().call();
 
       // Check if has correct omg balance
       assert.strictEqual(omgBalanceAfter, Bignumber(omgBalanceBefore).minus(omgAmountToExchange).toString(10));

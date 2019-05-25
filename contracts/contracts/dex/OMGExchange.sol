@@ -4,7 +4,7 @@ import "../helper/SafeMath.sol";
 import "../helper/ERC20Interface.sol";
 
 // Exchange a specific token to DAI with specific rate in this contract
-contract TokenExchange {
+contract OMGExchange {
   using SafeMath for uint256;
 
   string public tokenName;
