@@ -28,21 +28,11 @@ contract BasicToken is ERC20Basic {
   mapping(address => uint) balances;
 
   /**
-   * @dev Fix for the ERC20 short address attack.
-   */
-  modifier onlyPayloadSize(uint size) {
-     if(msg.data.length < size + 4) {
-       revert();
-     }
-     _;
-  }
-
-  /**
   * @dev transfer token for a specified address
   * @param _to The address to transfer to.
   * @param _value The amount to be transferred.
   */
-  function transfer(address _to, uint _value) public onlyPayloadSize(2 * 32) {
+  function transfer(address _to, uint _value) public {
     balances[msg.sender] = balances[msg.sender].sub(_value);
     balances[_to] = balances[_to].add(_value);
     emit Transfer(msg.sender, _to, _value);
@@ -90,7 +80,7 @@ contract StandardToken is BasicToken, ERC20 {
    * @param _to address The address which you want to transfer to
    * @param _value uint the amout of tokens to be transfered
    */
-  function transferFrom(address _from, address _to, uint _value) onlyPayloadSize(3 * 32) public {
+  function transferFrom(address _from, address _to, uint _value) public {
     uint256 _allowance = allowed[_from][msg.sender];
 
     // Check is not needed because sub(_allowance, _value) will already revert() if this condition is not met
@@ -113,7 +103,7 @@ contract StandardToken is BasicToken, ERC20 {
     //  allowance to zero by calling `approve(_spender, 0)` if it is not
     //  already 0 to mitigate the race condition described here:
     //  https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
-    if ((_value != 0) && (allowed[msg.sender][_spender] != 0)) revert();
+    if ((_value != 0) && (allowed[msg.sender][_spender] != 0)) revert("approve revert");
 
     allowed[msg.sender][_spender] = _value;
     emit Approval(msg.sender, _spender, _value);
@@ -191,7 +181,7 @@ contract Pausable is Ownable {
    * @dev modifier to allow actions only when the contract IS paused
    */
   modifier whenNotPaused() {
-    if (paused) revert();
+    if (paused) revert("it's paused");
     _;
   }
 
@@ -199,7 +189,7 @@ contract Pausable is Ownable {
    * @dev modifier to allow actions only when the contract IS NOT paused
    */
   modifier whenPaused {
-    if (!paused) revert();
+    if (!paused) revert("it's not paused");
     _;
   }
 

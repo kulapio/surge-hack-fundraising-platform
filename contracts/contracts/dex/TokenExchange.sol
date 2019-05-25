@@ -11,6 +11,9 @@ contract TokenExchange {
   uint256 public rateInDai;
   ERC20 public token;
 
+  // Dai
+  ERC20 public dai;
+
   // Debug
   uint256 public destAmt;
 
@@ -24,15 +27,25 @@ contract TokenExchange {
     rateInDai = _rateInDai;
   }
 
+  function setDai(ERC20 _daiAddress) public {
+    dai = _daiAddress;
+  }
+
+  function setTokenAddress(ERC20 _tokenAddress) public {
+    token = _tokenAddress;
+  }
+
   function sell(uint256 _amount) public returns (uint256) {
     // Cut money from user
-    // token.transferFrom(msg.sender, address(this), _amount);
+    token.transferFrom(msg.sender, address(this), _amount);
 
     // Calculate dest amount with current rate
     uint256 destAmount = _amount.mul(rateInDai).div(10 ** 18);
 
     // Debug only
     destAmt = destAmount;
+
+    // Transfer dai back to user
 
     return destAmount;
   }
