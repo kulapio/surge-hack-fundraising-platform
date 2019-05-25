@@ -1,0 +1,310 @@
+[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_newApprover",
+				"type": "address"
+			}
+		],
+		"name": "addApprover",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_pid",
+				"type": "uint32"
+			}
+		],
+		"name": "approveProposal",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_pid",
+				"type": "uint32"
+			},
+			{
+				"name": "_sponsor",
+				"type": "address"
+			},
+			{
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "donateProposal",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_pid",
+				"type": "uint32"
+			}
+		],
+		"name": "massExits",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_pid",
+				"type": "uint32"
+			}
+		],
+		"name": "rejectProposal",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_approver",
+				"type": "address"
+			}
+		],
+		"name": "removeApprover",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_pid",
+				"type": "uint32"
+			},
+			{
+				"name": "_deliveryDescHash",
+				"type": "string"
+			},
+			{
+				"name": "_deliveryDocHash",
+				"type": "string"
+			}
+		],
+		"name": "submitDeliveryReport",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_proposalName",
+				"type": "string"
+			},
+			{
+				"name": "_proposalDescHash",
+				"type": "string"
+			},
+			{
+				"name": "_proposalDocHash",
+				"type": "string"
+			},
+			{
+				"name": "_goal",
+				"type": "uint256"
+			},
+			{
+				"name": "_dueDate",
+				"type": "uint256"
+			}
+		],
+		"name": "submitProposal",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_pid",
+				"type": "uint32"
+			}
+		],
+		"name": "withdrawFund",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"name": "_daiContractAddr",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "daiERC20",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_pid",
+				"type": "uint32"
+			}
+		],
+		"name": "getProposal",
+		"outputs": [
+			{
+				"components": [
+					{
+						"name": "id",
+						"type": "uint32"
+					},
+					{
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"name": "descHash",
+						"type": "string"
+					},
+					{
+						"name": "docHash",
+						"type": "string"
+					},
+					{
+						"name": "goal",
+						"type": "uint256"
+					},
+					{
+						"name": "dueDate",
+						"type": "uint256"
+					},
+					{
+						"name": "backedAmount",
+						"type": "uint256"
+					},
+					{
+						"name": "approveStatus",
+						"type": "uint8"
+					},
+					{
+						"name": "isWithdrawed",
+						"type": "bool"
+					},
+					{
+						"name": "deliveryDescHash",
+						"type": "string"
+					},
+					{
+						"name": "deliveryDocHash",
+						"type": "string"
+					},
+					{
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "_proposal",
+				"type": "tuple"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getProposalAmount",
+		"outputs": [
+			{
+				"name": "_amount",
+				"type": "uint32"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_pid",
+				"type": "uint32"
+			}
+		],
+		"name": "getSponsorAmountByProposalId",
+		"outputs": [
+			{
+				"name": "_amount",
+				"type": "uint32"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_pid",
+				"type": "uint32"
+			},
+			{
+				"name": "_index",
+				"type": "uint32"
+			}
+		],
+		"name": "getSponsorByProposalId",
+		"outputs": [
+			{
+				"name": "_sponsor",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
