@@ -17,6 +17,6 @@ contract DAIToken is PausableToken, MintableToken {
       symbol = _symbol;
       decimals = _decimals;
 
-      mint(msg.sender, 100000000 * 10**18);
+      // mint(msg.sender, 100000000 * 10**18);
   }
 }

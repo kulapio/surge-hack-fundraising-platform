@@ -7,9 +7,7 @@ import "../helper/ERC20Interface.sol";
 contract DexExchange {
   using SafeMath for uint256;
 
-  string public tokenName;
-  uint256 public rateInDai;
-  ERC20 public token;
+  mapping (address => uint256) public tokenRate;
 
   // Dai
   ERC20 public dai;
@@ -17,27 +15,23 @@ contract DexExchange {
   // Debug
   uint256 public destAmt;
 
-  constructor(string memory _tokenName, ERC20 _token, uint256 _rateInDai) public {
-    tokenName = _tokenName;
-    token = _token;
-    rateInDai = _rateInDai;
-  }
+  // constructor() public {
+  // }
 
-  function setRate(uint256 _rateInDai) public {
-    rateInDai = _rateInDai;
+  function setRate(ERC20 _tokenAddress, uint256 _rateInDai) public {
+    tokenRate[address(_tokenAddress)] = _rateInDai;
   }
 
   function setDaiTokenAddress(ERC20 _daiAddress) public {
     dai = _daiAddress;
   }
 
-  function setTokenAddress(ERC20 _tokenAddress) public {
-    token = _tokenAddress;
-  }
-
-  function sell(uint256 _amount) public returns (uint256) {
+  function sell(ERC20 _token, uint256 _amount) public returns (uint256) {
     // Cut money from user
-    token.transferFrom(msg.sender, address(this), _amount);
+    _token.transferFrom(msg.sender, address(this), _amount);
+
+    // Get rate
+    uint256 rateInDai = tokenRate[address(_token)];
 
     // Calculate dest amount with current rate
     uint256 destAmount = _amount.mul(rateInDai).div(10 ** 18);

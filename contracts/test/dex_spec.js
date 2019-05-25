@@ -18,7 +18,8 @@ config({
   //},
   contracts: {
     DexExchange: {
-      args: [ 'OMG', '0xC4375B7De8af5a38a93548eb8453a498222C4fF2', (2.03 * 1e18).toString() ]
+      // args: [ 'OMG', '0xC4375B7De8af5a38a93548eb8453a498222C4fF2', (2.03 * 1e18).toString() ]
+      args: []
     },
     OMGToken: {
       args: [ 'OMG', 'OMG', 18 ],
@@ -35,24 +36,24 @@ config({
 contract("DexExchange", function () {
   this.timeout(0);
 
-  it("should have correct token name", async function () {
-    let result = await DexExchange.methods.tokenName().call();
-    assert.strictEqual(result, 'OMG');
-  });
+  // it("should have correct token name", async function () {
+  //   let result = await DexExchange.methods.tokenName().call();
+  //   assert.strictEqual(result, 'OMG');
+  // });
 
-  it("should have correct rate", async function () {
-    let result = await DexExchange.methods.rateInDai().call();
-    assert.strictEqual(result, (2.03 * 1e18).toString());
-  });
+  // it("should have correct rate", async function () {
+  //   let result = await DexExchange.methods.rateInDai().call();
+  //   assert.strictEqual(result, (2.03 * 1e18).toString());
+  // });
 
-  it("should have correct toekn address", async function () {
-    let result = await DexExchange.methods.token().call();
-    assert.strictEqual(result, '0xC4375B7De8af5a38a93548eb8453a498222C4fF2');
-  });
+  // it("should have correct toekn address", async function () {
+  //   let result = await DexExchange.methods.token().call();
+  //   assert.strictEqual(result, '0xC4375B7De8af5a38a93548eb8453a498222C4fF2');
+  // });
 
   it("set exchange rate", async function () {
-    await DexExchange.methods.setRate((3.1 * 1e18).toString()).send({from: accounts[1]});
-    let result = await DexExchange.methods.rateInDai().call();
+    await DexExchange.methods.setRate(OMGToken.address, (3.1 * 1e18).toString()).send({from: accounts[1]});
+    let result = await DexExchange.methods.tokenRate(OMGToken.address).call();
     assert.strictEqual(result, (3.1 * 1e18).toString());
   });
 
@@ -66,7 +67,7 @@ contract("DexExchange", function () {
   describe("exchange omg to dai", async function() {
     it("Init DexExchange", async function() {
       // Update omg token address for token exchanger
-      await DexExchange.methods.setTokenAddress(OMGToken.address).send({from: accounts[0]});
+      // await DexExchange.methods.setTokenAddress(OMGToken.address).send({from: accounts[0]});
 
       // Update dai token address for token exchanger
       await DexExchange.methods.setDaiTokenAddress(DAIToken.address).send({from: accounts[0]});
@@ -94,25 +95,28 @@ contract("DexExchange", function () {
       // Balance before
       const omgBalanceBefore = await OMGToken.methods.balanceOf(accounts[0]).call();
       const daiBalanceBefore = await DAIToken.methods.balanceOf(accounts[0]).call();
+      console.log(`omgBalanceBefore ${omgBalanceBefore}`)
+      console.log(`daiBalanceBefore ${daiBalanceBefore}`)
 
       // Buy
-      await DexExchange.methods.sell(omgAmountToExchange.toString(10)).send({from: accounts[0]});
+      await DexExchange.methods.sell(OMGToken.address, omgAmountToExchange.toString(10)).send({from: accounts[0]});
 
       // Balance fater
       const omgBalanceAfter = await OMGToken.methods.balanceOf(accounts[0]).call();
       const daiBalanceAfter = await DAIToken.methods.balanceOf(accounts[0]).call();
-      // console.log(`omgBalanceAfter ${omgBalanceAfter}`)
-      // console.log(`daiBalanceAfter ${daiBalanceAfter}`)
+      console.log(`omgBalanceAfter ${omgBalanceAfter}`)
+      console.log(`daiBalanceAfter ${daiBalanceAfter}`)
 
       // Verify
       // Get rate
-      let rateInDai = await DexExchange.methods.rateInDai().call();
+      let omgRateInDai = await DexExchange.methods.tokenRate(OMGToken.address).call();
+      console.log(`omgRateInDai ${omgRateInDai}`)
 
       // Check if has correct omg balance
       assert.strictEqual(omgBalanceAfter, Bignumber(omgBalanceBefore).minus(omgAmountToExchange).toString(10));
 
       // Check if has correct dai balance
-      const expectedDaiReturn = omgAmountToExchange.times(rateInDai).div(1e18);
+      const expectedDaiReturn = omgAmountToExchange.times(omgRateInDai).div(1e18);
       assert.strictEqual(
         Bignumber(daiBalanceAfter).minus(Bignumber(daiBalanceBefore)).toString(10), 
         expectedDaiReturn.toString(10)
