@@ -52,10 +52,9 @@ module.exports = {
     //strategy: 'implicit',
 
     contracts: {
-      // example:
-      //SimpleStorage: {
-      //  args: [ 100 ]
-      //}
+      Katinrun: {
+       args: ["0x018F2071db8B2ccDfa713984b01A6c3B7D758024", "0xc4375b7de8af5a38a93548eb8453a498222c4ff2"]
+      }
     }
   },
 
