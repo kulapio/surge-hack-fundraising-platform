@@ -69,7 +69,7 @@ contract Katinrun {
 
   function submitProposal(
     string memory _proposalName,
-    string memory _proposalDesclHash,
+    string memory _proposalDescHash,
     string memory _proposalDocHash,
     uint256 _goal,
     uint256 _dueDate
@@ -78,7 +78,7 @@ contract Katinrun {
       Proposal({
         id: uint32(proposals.length) + 1,
         name: _proposalName,
-        descHash: _proposalDesclHash,
+        descHash: _proposalDescHash,
         docHash: _proposalDocHash,
         goal: _goal,
         dueDate: _dueDate,
