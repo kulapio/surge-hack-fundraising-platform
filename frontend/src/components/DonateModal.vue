@@ -43,13 +43,17 @@
         You donate in amount {{ daiVal }} DAI
       </span>
     </div>
-    <div class="full button submit">
+    <div class="full button submit" @click="submit">
       Submit donate
     </div>
   </div>
 </template>
 
 <script>
+import { donateWithToken } from '@/services/swap.js'
+import ERC20ABI from '@/constants/ERC20ABI.json'
+import bn from '@/utils/bn'
+
 export default {
   name: 'DonateModal',
   data () {
@@ -61,27 +65,33 @@ export default {
         },
         {
           code: 'DAI',
-          name: 'Dai'
+          name: 'Dai',
+          address: '0x6b002bf0489ab6a2473fd4d3e5c54780ae10c08b'
         },
         {
           code: 'MKR',
-          name: 'Maker'
+          name: 'Maker',
+          address: '0x7ba7d315f575e6077ec7c26d04cd59011e2e7ba2'
         },
         {
           code: 'OMG',
-          name: 'OmiseGo'
+          name: 'OmiseGo',
+          address: '0x08336136c09f483036e854088143290ac12bdcb2'
         },
         {
           code: 'KNC',
-          name: 'KyberNetwork'
+          name: 'KyberNetwork',
+          address: '0x9b79f24bf3da40072189664621907730abc57b29'
         },
         {
           code: 'SNT',
-          name: 'Status'
+          name: 'Status',
+          address: '0x2b4f12cddb0653f5a47ad61f242d9bf62625a04a'
         },
         {
           code: 'MESG',
-          name: 'MESG'
+          name: 'MESG',
+          address: '0x7ccb8f73fa06ade42b38e401dd240612887cf682'
         }
       ],
       tokenSelected: {
@@ -89,7 +99,8 @@ export default {
         name: 'Ethereum'
       },
       amount: 0,
-      daiVal: 0
+      daiVal: 0,
+      pid: 0
     }
   },
   watch: {
@@ -111,6 +122,9 @@ export default {
       }
     }
   },
+  created () {
+    this.pid = this.$route.params.id
+  },
   methods: {
     selectToken (t) {
       this.tokenSelected = t
@@ -128,6 +142,18 @@ export default {
         this.daiVal = this.amount * 0.032
       } else if (this.tokenSelected.code === 'DAI') {
         this.daiVal = this.amount * 1
+      }
+    },
+    async submit () {
+      if (this.tokenSelected.code !== 'ETH') {
+        const amount = bn(this.amount).baseInWei(18).toString()
+        const erc20 = await new this.$web3.eth.Contract(ERC20ABI, this.tokenSelected.address)
+        const dex = '0xf968219c1be33e1a7f506aad3bef9af6dc433909'
+        const usrAddr = await this.$web3.eth.getAccounts()
+        await erc20.methods.approve(dex, amount).send({ from: usrAddr[0] })
+        .on('transactionHash', async () => {
+          await donateWithToken(this.tokenSelected.address, amount, this.pid, usrAddr[0])
+        })
       }
     }
   }
