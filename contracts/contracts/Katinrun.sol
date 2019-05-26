@@ -28,10 +28,10 @@ contract Katinrun {
     mapping(address => uint256) sponsorDonateAmount;
   }
 
-  Proposal[] proposals;
+  Proposal[] public proposals;
 
-  mapping(address => bool) approvers;
-  mapping(uint32 => ProposalSponsors) proposalSponsors;
+  mapping(address => bool) public approvers;
+  mapping(uint32 => ProposalSponsors) private proposalSponsors;
 
   modifier isApprover {
     require(approvers[msg.sender], "This address is not an approver");
@@ -147,9 +147,10 @@ contract Katinrun {
     return uint32(proposalSponsors[_pid - 1].sponsors.length);
   }
 
-  function getSponsorByProposalId(uint32 _pid, uint32 _index) public view returns (address _sponsor) {
+  function getSponsorByProposalId(uint32 _pid, uint32 _index) public view returns (address _sponsor, uint256 _sponsorDonateAmount) {
     require(_pid > 0, "PID Can not be 0");
-    require(_index < proposalSponsors[_pid].sponsors.length, "Not found");
-    return proposalSponsors[_pid - 1].sponsors[_index];
+    require(_index < proposalSponsors[_pid - 1].sponsors.length, "Not found");
+    address sponsorAddr = proposalSponsors[_pid - 1].sponsors[_index];
+    return (sponsorAddr, proposalSponsors[_pid - 1].sponsorDonateAmount[sponsorAddr]);
   }
 }

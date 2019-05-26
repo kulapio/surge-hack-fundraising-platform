@@ -170,6 +170,25 @@
 	},
 	{
 		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "approvers",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
 		"inputs": [],
 		"name": "daiERC20",
 		"outputs": [
@@ -300,6 +319,73 @@
 		"outputs": [
 			{
 				"name": "_sponsor",
+				"type": "address"
+			},
+			{
+				"name": "_sponsorDonateAmount",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "proposals",
+		"outputs": [
+			{
+				"name": "id",
+				"type": "uint32"
+			},
+			{
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"name": "descHash",
+				"type": "string"
+			},
+			{
+				"name": "docHash",
+				"type": "string"
+			},
+			{
+				"name": "goal",
+				"type": "uint256"
+			},
+			{
+				"name": "dueDate",
+				"type": "uint256"
+			},
+			{
+				"name": "backedAmount",
+				"type": "uint256"
+			},
+			{
+				"name": "approveStatus",
+				"type": "uint8"
+			},
+			{
+				"name": "isWithdrawed",
+				"type": "bool"
+			},
+			{
+				"name": "deliveryDescHash",
+				"type": "string"
+			},
+			{
+				"name": "deliveryDocHash",
+				"type": "string"
+			},
+			{
+				"name": "owner",
 				"type": "address"
 			}
 		],

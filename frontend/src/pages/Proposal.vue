@@ -42,7 +42,7 @@
         <div class="full amount">
           Raised by {{ numberOfSponsors }} people in 29 months
         </div>
-        <div class="full donate-btn">
+        <div class="full donate-btn" @click="isOpenDonateModal = true">
           Donate now
         </div>
       </div>
@@ -62,6 +62,9 @@
         </div>
       </div>
     </div>
+    <b-modal :active.sync="isOpenDonateModal">
+      <DonateModal/>
+    </b-modal>
   </div>
 </template>
 
@@ -74,12 +77,14 @@ import KTR_ABI from '@/constants/katinrun.json'
 import { KATINRUN_ADDRESS } from '@/constants/index'
 import bn from '@/utils/bn'
 import moment from 'moment'
+import DonateModal from '@/components/DonateModal'
 
 export default {
   name: 'Proposal',
   components: {
     VueSlideBar,
-    DonateItem
+    DonateItem,
+    DonateModal
   },
   data () {
     return {
@@ -89,6 +94,7 @@ export default {
       katinrun: null,
       proposal: {},
       timeLeft: 0,
+      isOpenDonateModal: false,
       numberOfSponsors: 100,
       sponsors: []
     }
