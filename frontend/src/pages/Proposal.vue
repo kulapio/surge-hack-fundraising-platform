@@ -50,8 +50,15 @@
         <img class="w-100pct" src="@/assets/mockup-creator-profile.png">
       </div>
       <div class="full">
-        <div v-for="i in 8" class="full">
-          <DonateItem/>
+        <div
+          v-for="i in 8"
+          :key="i"
+          class="full"
+        >
+          <DonateItem
+            address="0x28361D7c04C1D0cdB2580B7776F31C04a38a5FBE"
+            :amount="1200"
+          />
         </div>
       </div>
     </div>
