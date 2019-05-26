@@ -1,7 +1,7 @@
 <template>
   <div class="header-container">
     <div class="left">
-      <img src="@/assets/ktr-logo.jpg">
+      <img src="@/assets/ktr-logo.jpg" @click="$router.push({ name: 'Proposals' })">
     </div>
     <div class="right">
       <span>Home</span>
@@ -34,6 +34,10 @@ export default {
 .left {
   float: left;
   width: 50%;
+
+  img {
+    cursor: pointer;
+  }
 }
 .right {
   float: right;
