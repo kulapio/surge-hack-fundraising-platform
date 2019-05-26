@@ -16,13 +16,13 @@
       <div class="full donate">
         <div class="fund">
           <span class="backed">
-            $1,335,000
+            ${{ backedAmount | numberWithComma(2) }}
           </span>
           <span class="of">
             of
           </span>
           <span class="goal">
-            $2,670,000
+            ${{ goal | numberWithComma(2) }}
           </span>
         </div>
         <div class="full bar">
@@ -36,11 +36,11 @@
             :paddingless="true"
           />
           <div class="day-left">
-            36 days left
+            {{ timeLeft }} days left
           </div>
         </div>
         <div class="full amount">
-          Raised by 115,870 people in 29 months
+          Raised by {{ numberOfSponsors }} people in 29 months
         </div>
         <div class="full donate-btn">
           Donate now
@@ -68,6 +68,12 @@
 <script>
 import VueSlideBar from 'vue-slide-bar'
 import DonateItem from '@/components/DonateItem'
+import { getProposalAmount, getSponsorAmountByProposalId } from '@/services/katinrun.js'
+
+import KTR_ABI from '@/constants/katinrun.json'
+import { KATINRUN_ADDRESS } from '@/constants/index'
+import bn from '@/utils/bn'
+import moment from 'moment'
 
 export default {
   name: 'Proposal',
@@ -82,7 +88,31 @@ export default {
       backedAmount: 50,
       katinrun: null,
       proposal: {},
-      timeLeft: 0
+      timeLeft: 0,
+      numberOfSponsors: 100
+    }
+  },
+  // async created () {
+  //   this.loadProposalCount()
+  // },
+  async mounted () {
+    this.katinrun = await new this.$web3.eth.Contract(KTR_ABI, KATINRUN_ADDRESS)
+    setInterval(async () => {
+      await this.getPoppularProject()
+    }, 1000)
+  },
+  methods: {
+    async loadProposalCount () {
+      const result = await getProposalAmount()
+      console.log('result', result)
+    },
+
+    async getPoppularProject () {
+      this.proposal = await this.katinrun.methods.getProposal(1).call()
+      this.timeLeft = moment.unix(this.proposal.dueDate).diff(moment(), 'days')
+      this.goal = bn(this.proposal.goal).toBase().toNumber()
+      this.backedAmount = bn(this.proposal.backedAmount).toBase().toNumber()
+      this.numberOfSponsors = bn(await getSponsorAmountByProposalId(1)).toNumber()
     }
   }
 }
