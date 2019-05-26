@@ -127,11 +127,13 @@ export default {
     },
 
     async getRecentDonators () {
-      const sponsorCount = await await getSponsorAmountByProposalId(1)
+      let sponsorCount = await await getSponsorAmountByProposalId(1)
       const demos = ['0xFceE22fcC5607812DB42371D9F75CF527e44718a', '0x786F95663B1fEAa429FE608dd51946356f9e6D54', '0x950807aeaCCb5E66DC09e9F99A7d559A880D8b14']
 
 
       let sponsors = []
+      console.log(sponsorCount)
+      sponsorCount = 3
       for(var i=0; i < sponsorCount; i++) {
         // console.log(`i ${i}`)
         // let sponsor = await getSponsorByProposalId(1, i)
