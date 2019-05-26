@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "bignumber.js": "^8.1.1",
+    "buefy": "^0.7.6",
     "core-js": "^2.6.5",
     "identicon.js": "^2.3.3",
     "moment": "^2.24.0",

@@ -42,7 +42,7 @@
         <div class="full amount">
           Raised by 115,870 people in 29 months
         </div>
-        <div class="full donate-btn">
+        <div class="full donate-btn" @click="isOpenDonateModal = true">
           Donate now
         </div>
       </div>
@@ -62,18 +62,23 @@
         </div>
       </div>
     </div>
+    <b-modal :active.sync="isOpenDonateModal">
+      <DonateModal/>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import VueSlideBar from 'vue-slide-bar'
 import DonateItem from '@/components/DonateItem'
+import DonateModal from '@/components/DonateModal'
 
 export default {
   name: 'Proposal',
   components: {
     VueSlideBar,
-    DonateItem
+    DonateItem,
+    DonateModal
   },
   data () {
     return {
@@ -82,7 +87,8 @@ export default {
       backedAmount: 50,
       katinrun: null,
       proposal: {},
-      timeLeft: 0
+      timeLeft: 0,
+      isOpenDonateModal: false
     }
   }
 }
