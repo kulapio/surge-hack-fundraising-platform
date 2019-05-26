@@ -9,7 +9,7 @@ interface KatinrunContract {
 contract DexAndDonate {
   // mapping(string => DexExchange)
   DexExchange public exchange;
-  KatinrunContract public katinrun = KatinrunContract();
+  KatinrunContract public katinrun;
   ERC20 public daiToken = ERC20(0x6b002Bf0489ab6A2473fD4D3e5c54780Ae10C08b);
 
   constructor(DexExchange _exchange) public {
