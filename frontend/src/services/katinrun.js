@@ -1,14 +1,13 @@
 'use strict';
 
 const Web3         = require('web3'),
-      pe           = require('parse-error'),
       KatinrunJson = require('./katinrun.json');
 
 const web3 = new Web3('https://kovan.infura.io/3ikLuZwohJ81nAe4aPyI'); // Kovan
 
 const Katinrun = new web3.eth.Contract(
     KatinrunJson,
-    "0x8c7bd8aafae836f7da605889bef20e22423fe4d8"
+    "0xD45Db64bcDbDC42cAB08EEF8e848acCa1Ef76481"
 );
 
 // main();
@@ -201,16 +200,16 @@ export async function getSponsorAmountByProposalId(pid) {
 }
 
 export async function getSponsorByProposalId(pid, index) {
-    let err, sponsorAddr, _sponsorDonateAmount;
+    let err, sponsorAddr;
 
-    [err, sponsorAddr, sponsorDonateAmount] = await callContractFunction(
+    [err, sponsorAddr] = await callContractFunction(
         Katinrun.methods.getSponsorByProposalId(pid, index).call({})
     );
 
     if (err) {
         throw new Error(err.message);
     }
-    return [sponsorAddr, sponsorDonateAmount];
+    return sponsorAddr;
 }
 
 function callContractFunction(contractFunction) {
@@ -219,6 +218,6 @@ function callContractFunction(contractFunction) {
             return [null, receipt];
         })
         .catch(err => {
-            return [pe(err), null];
+            throw new Error(err.message);
         });
 }

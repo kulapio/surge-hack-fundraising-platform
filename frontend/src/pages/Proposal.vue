@@ -3,7 +3,7 @@
     <div class="left">
       <img src="@/assets/koa-project.png">
       <div class="title">
-        Title
+        Kao-kon-la-kao
       </div>
       <div class="desc">
         Public donations continued to pour in for Toon Bodyslam’s charity run although he had completed his 2,191-km run in the northernmost district of Mae Sai district of Chiang Rai Monday evening (Dec 25) to a warm welcome by his admirers.
@@ -104,11 +104,13 @@ export default {
   // },
   async mounted () {
     this.katinrun = await new this.$web3.eth.Contract(KTR_ABI, KATINRUN_ADDRESS)
+    await this.getPoppularProject()
+    await this.getRecentDonators()
     setInterval(async () => {
       await this.getPoppularProject()
 
       await this.getRecentDonators()
-    }, 10000)
+    }, 1000)
   },
   methods: {
     async loadProposalCount () {
