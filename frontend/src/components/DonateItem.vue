@@ -5,7 +5,7 @@
     </div>
     <div class="right">
       <div class="amount">
-        1,200 DAI
+        ${{ amount | numberWithComma(2) }}
       </div>
       <div class="address">
         {{ address }}
