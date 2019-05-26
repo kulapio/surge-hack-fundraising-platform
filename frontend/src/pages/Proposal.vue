@@ -114,8 +114,7 @@ export default {
   },
   methods: {
     async loadProposalCount () {
-      const result = await getProposalAmount()
-      console.log('result', result)
+      await getProposalAmount()
     },
 
     async getPoppularProject () {
@@ -132,7 +131,6 @@ export default {
 
 
       let sponsors = []
-      console.log(sponsorCount)
       sponsorCount = 3
       for(var i=0; i < sponsorCount; i++) {
         // console.log(`i ${i}`)

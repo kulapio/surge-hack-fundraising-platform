@@ -193,7 +193,7 @@ export async function getSponsorAmountByProposalId(pid) {
         Katinrun.methods.getSponsorAmountByProposalId(pid).call({})
     );
 
-    console.log(err, amount)
+    // console.log(err, amount)
 
     if (err) {
         throw new Error(err.message);

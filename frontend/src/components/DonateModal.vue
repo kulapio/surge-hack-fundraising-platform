@@ -146,9 +146,7 @@ export default {
     },
     async submit () {
       if (this.tokenSelected.code !== 'ETH') {
-        console.log(`this.amount ${this.amount}`)
         const amount = bn(this.amount).toWei(18).toString()
-        console.log(amount)
         const erc20 = await new this.$web3.eth.Contract(ERC20ABI, this.tokenSelected.address)
         const dex = '0xf968219c1be33e1a7f506aad3bef9af6dc433909'
         const usrAddr = await this.$web3.eth.getAccounts()
