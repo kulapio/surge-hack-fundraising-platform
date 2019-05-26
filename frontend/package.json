@@ -10,8 +10,10 @@
   "dependencies": {
     "bignumber.js": "^8.1.1",
     "core-js": "^2.6.5",
+    "identicon.js": "^2.3.3",
     "moment": "^2.24.0",
     "vue": "^2.6.10",
+    "vue-router": "^3.0.6",
     "vue-slide-bar": "^1.1.9",
     "web3": "^1.0.0-beta.55"
   },

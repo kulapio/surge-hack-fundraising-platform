@@ -5,12 +5,15 @@
       <div/>
     </div>
     <div class="pop--content">
-      <div class="pop--content--half">
-        <img src="@/assets/koa-project.jpg">
+      <div class="pop--content--half" @click="$router.push({ name: 'Proposal', params: { id: 1 } })">
+        <img src="@/assets/koa-project.png">
       </div>
       <div class="pop--content--half ctx">
         <div class="top">
-          <div class="ctx--title">
+          <div
+            class="ctx--title"
+            @click="$router.push({ name: 'Proposal', params: { id: 1 } })"
+          >
             {{ proposal.name }}
           </div>
           <div>
