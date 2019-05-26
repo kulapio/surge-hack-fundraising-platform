@@ -59,7 +59,7 @@ module.exports = {
     contracts: {
       // example:
       Katinrun: {
-       args: [ 100 ]
+       args: ["0x018F2071db8B2ccDfa713984b01A6c3B7D758024", "0xc4375b7de8af5a38a93548eb8453a498222c4ff2"]
       },
       DexExchange: {
         args: [ 'OMG', '0xc4375b7de8af5a38a93548eb8453a498222c4ff2', (2.03 * 1e18).toString() ]
