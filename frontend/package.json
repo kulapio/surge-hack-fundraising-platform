@@ -12,7 +12,7 @@
     "buefy": "^0.7.6",
     "core-js": "^2.6.5",
     "identicon.js": "^2.3.3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "parse-error": "^0.2.0",
     "vue": "^2.6.10",
     "vue-router": "^3.0.6",
